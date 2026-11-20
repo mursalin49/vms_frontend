@@ -119,8 +119,8 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
   Widget _sectionTitle(String title) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(top: 8, bottom: 20),
-      padding: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(top: 8, bottom: 18),
+      padding: const EdgeInsets.only(bottom: 10),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.tableBorder, width: 1.2)),
       ),
@@ -149,7 +149,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
         foregroundColor: AppColors.deepBlue,
         side: const BorderSide(color: AppColors.inputBorder),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
       ),
     );
 
@@ -169,11 +169,11 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
         // 2-Column Responsive Layout: Form on Left, Compact Live Preview on Right
         LayoutBuilder(
           builder: (context, constraints) {
-            // Keep 2-column layout active whenever width >= 720px for true side-by-side design
-            final isDesktop = constraints.maxWidth >= 720;
+            final isDesktop = constraints.maxWidth >= 740;
+            final isSmallMobile = constraints.maxWidth < 420;
 
             final formCard = Container(
-              padding: const EdgeInsets.all(36),
+              padding: EdgeInsets.all(isDesktop ? 36 : 20),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(18),
@@ -221,7 +221,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
                         validator: (v) => v == null ? 'Please select a company' : null,
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
                     // Section 2: Details
                     _sectionTitle('Vehicle Details'),
@@ -243,7 +243,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
                         validator: (v) => Validators.required(v, 'Brand is required'),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 18),
                     _buildTwoColRow(
                       context,
                       CustomTextField(
@@ -265,7 +265,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
                     ),
 
                     if (form.generalError != null) ...[
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                         decoration: BoxDecoration(
@@ -292,46 +292,72 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
                       ),
                     ],
 
-                    const SizedBox(height: 36),
+                    const SizedBox(height: 32),
 
                     // Buttons
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        OutlinedButton(
-                          onPressed: form.isSaving ? null : () => context.go('/vehicles'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.deepBlue,
-                            side: const BorderSide(color: AppColors.inputBorder),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+                    if (isSmallMobile)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: form.isSaving ? null : () => context.go('/vehicles'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.deepBlue,
+                                side: const BorderSide(color: AppColors.inputBorder),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                              ),
+                              child: const Text('Cancel'),
+                            ),
                           ),
-                          child: const Text('Cancel'),
-                        ),
-                        const SizedBox(width: 12),
-                        PrimaryButton(
-                          label: _isEdit ? 'Update Vehicle' : 'Save Vehicle',
-                          isLoading: form.isSaving,
-                          onPressed: _save,
-                        ),
-                      ],
-                    ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: PrimaryButton(
+                              label: _isEdit ? 'Update' : 'Save',
+                              isLoading: form.isSaving,
+                              onPressed: _save,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          OutlinedButton(
+                            onPressed: form.isSaving ? null : () => context.go('/vehicles'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.deepBlue,
+                              side: const BorderSide(color: AppColors.inputBorder),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+                            ),
+                            child: const Text('Cancel'),
+                          ),
+                          const SizedBox(width: 12),
+                          PrimaryButton(
+                            label: _isEdit ? 'Update Vehicle' : 'Save Vehicle',
+                            isLoading: form.isSaving,
+                            onPressed: _save,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
             );
 
-            // Small compact live preview sidebar matching the uploaded reference image
+            // Small compact live preview sidebar matching reference image
             final previewSidebar = SizedBox(
               width: isDesktop ? 270 : double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildLivePreviewCard(),
+                  _buildLivePreviewCard(isDesktop: isDesktop),
                   if (form.vehicleNumberError != null) ...[
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
                     Container(
-                      padding: const EdgeInsets.all(18),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: AppColors.errorBg,
                         borderRadius: BorderRadius.circular(14),
@@ -363,11 +389,12 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
               );
             }
 
+            // On Mobile: stack with Preview card above form
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 previewSidebar,
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 formCard,
               ],
             );
@@ -381,12 +408,12 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
   Widget _buildTwoColRow(BuildContext context, Widget left, Widget right) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 500) {
+        if (constraints.maxWidth < 540) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               left,
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               right,
             ],
           );
@@ -405,7 +432,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
   }
 
   /// Live Preview Dark Card matching the user's uploaded reference image
-  Widget _buildLivePreviewCard() {
+  Widget _buildLivePreviewCard({required bool isDesktop}) {
     final vehicleNo = _number.text.trim().isNotEmpty ? _number.text.trim() : 'DHK-00-0000';
     final brand = _brand.text.trim().isNotEmpty ? _brand.text.trim() : 'Tata';
     final model = _model.text.trim().isNotEmpty ? _model.text.trim() : 'Prima';
@@ -414,7 +441,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
     final status = _status ?? VehicleStatus.active;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(
         color: const Color(0xFF0F2642),
         borderRadius: BorderRadius.circular(18),
@@ -440,7 +467,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
               color: AppColors.goldAccent,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
           // License Plate Container Box
           Container(
@@ -462,7 +489,7 @@ class _VehicleFormState extends ConsumerState<_VehicleForm> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
           // Vehicle Details text
           Text(

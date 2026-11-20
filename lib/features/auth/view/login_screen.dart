@@ -224,7 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildMobileLayout(AuthState auth) {
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 36),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 36),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 440),
           child: Column(
@@ -262,7 +262,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 24),
-              _buildFormCard(auth),
+              _buildFormCard(auth, isMobile: true),
               const SizedBox(height: 24),
               const Text(
                 '© Stark Group · Vehicle Management System',
@@ -276,9 +276,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// White Login Card
-  Widget _buildFormCard(AuthState auth) {
+  Widget _buildFormCard(AuthState auth, {bool isMobile = false}) {
     return Container(
-      padding: const EdgeInsets.all(40),
+      padding: EdgeInsets.all(isMobile ? 24 : 40),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
@@ -298,10 +298,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Welcome back',
               style: TextStyle(
-                fontSize: 28,
+                fontSize: isMobile ? 24 : 28,
                 fontWeight: FontWeight.w800,
                 color: AppColors.charcoal,
                 letterSpacing: -0.5,

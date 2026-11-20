@@ -18,12 +18,16 @@ class VehicleStatsCards extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWide = constraints.maxWidth >= 840;
-        final cardWidth = isWide ? (constraints.maxWidth - (3 * 16)) / 4 : (constraints.maxWidth - 12) / 2;
+        final w = constraints.maxWidth;
+        final isDesktop = w >= 860;
+        const gap = 12.0;
+
+        // 4 columns on desktop, 2 columns on mobile/tablet
+        final cardWidth = isDesktop ? (w - (3 * gap)) / 4 : (w - gap) / 2;
 
         return Wrap(
-          spacing: 16,
-          runSpacing: 16,
+          spacing: gap,
+          runSpacing: gap,
           children: [
             SizedBox(
               width: cardWidth,
@@ -32,6 +36,7 @@ class VehicleStatsCards extends StatelessWidget {
                 count: total,
                 ratio: 1.0,
                 barColor: AppColors.deepBlue,
+                isSmall: !isDesktop,
               ),
             ),
             SizedBox(
@@ -41,6 +46,7 @@ class VehicleStatsCards extends StatelessWidget {
                 count: active,
                 ratio: total > 0 ? active / total : 0,
                 barColor: AppColors.green,
+                isSmall: !isDesktop,
               ),
             ),
             SizedBox(
@@ -50,6 +56,7 @@ class VehicleStatsCards extends StatelessWidget {
                 count: maintenance,
                 ratio: total > 0 ? maintenance / total : 0,
                 barColor: AppColors.maintenanceBar,
+                isSmall: !isDesktop,
               ),
             ),
             SizedBox(
@@ -59,6 +66,7 @@ class VehicleStatsCards extends StatelessWidget {
                 count: inactive,
                 ratio: total > 0 ? inactive / total : 0,
                 barColor: AppColors.inactiveBar,
+                isSmall: !isDesktop,
               ),
             ),
           ],
@@ -74,17 +82,22 @@ class _StatCard extends StatelessWidget {
     required this.count,
     required this.ratio,
     required this.barColor,
+    this.isSmall = false,
   });
 
   final String label;
   final int count;
   final double ratio;
   final Color barColor;
+  final bool isSmall;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmall ? 14 : 20,
+        vertical: isSmall ? 14 : 18,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
@@ -95,28 +108,30 @@ class _StatCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 13,
+            style: TextStyle(
+              fontSize: isSmall ? 12 : 13,
               fontWeight: FontWeight.w600,
               color: AppColors.muted,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: isSmall ? 4 : 6),
           Text(
             '$count',
-            style: const TextStyle(
-              fontSize: 34,
+            style: TextStyle(
+              fontSize: isSmall ? 26 : 34,
               fontWeight: FontWeight.w800,
               color: AppColors.brandNavy,
               height: 1.1,
             ),
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: isSmall ? 10 : 14),
           // Progress track
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Container(
-              height: 6,
+              height: 5,
               width: double.infinity,
               color: AppColors.grayBg,
               child: FractionallySizedBox(
@@ -131,4 +146,3 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
-
