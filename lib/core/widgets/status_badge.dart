@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../features/vehicles/domain/vehicle_status.dart';
 import '../theme/app_colors.dart';
 
-/// Redesigned Status Pill:
-/// Active = #E3F5EC / #0F7B4F
-/// Maintenance = #FFF1D6 / #8A5A00
-/// Inactive = #EEF1F5 / #475569
+/// Status Pill matching the new redesign:
+/// Active = #E8F8F0 / #10B981
+/// Maintenance = #FFF7E6 / #F59E0B
+/// Inactive = #F1F5F9 / #64748B
 class StatusBadge extends StatelessWidget {
   const StatusBadge(this.status, {super.key, this.isDark = false});
 
@@ -45,7 +45,7 @@ class StatusBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(999),

@@ -10,6 +10,7 @@ class CustomDropdown<T> extends StatelessWidget {
     required this.onChanged,
     this.value,
     this.hint,
+    this.prefixIcon,
     this.validator,
     this.itemLabel,
   });
@@ -18,6 +19,7 @@ class CustomDropdown<T> extends StatelessWidget {
   final List<T> items;
   final T? value;
   final String? hint;
+  final Widget? prefixIcon;
   final String? Function(T?)? validator;
   final ValueChanged<T?> onChanged;
   final String Function(T)? itemLabel;
@@ -35,11 +37,12 @@ class CustomDropdown<T> extends StatelessWidget {
             color: AppColors.charcoal,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 7),
         DropdownButtonFormField<T>(
           // ignore: deprecated_member_use
           value: value,
           isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.muted),
           hint: hint == null
               ? null
               : Text(
@@ -63,8 +66,12 @@ class CustomDropdown<T> extends StatelessWidget {
                 ),
               ),
           ],
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: InputDecoration(
+            prefixIcon: prefixIcon,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: prefixIcon == null ? 16 : 12,
+              vertical: 13,
+            ),
           ),
         ),
       ],

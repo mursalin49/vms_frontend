@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Text field with label and error styling matching the premium redesign.
+/// Text field with label, optional prefix icon, and modern rounded styling.
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
@@ -12,13 +12,14 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.errorText,
     this.obscureText = false,
+    this.prefixIcon,
     this.suffix,
     this.onChanged,
     this.onSubmitted,
     this.textInputAction,
     this.keyboardType,
     this.autofocus = false,
-    this.height = 48,
+    this.height = 46,
   });
 
   final String label;
@@ -27,6 +28,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? errorText;
   final bool obscureText;
+  final Widget? prefixIcon;
   final Widget? suffix;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
@@ -48,7 +50,7 @@ class CustomTextField extends StatelessWidget {
             color: AppColors.charcoal,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 7),
         TextFormField(
           controller: controller,
           obscureText: obscureText,
@@ -66,8 +68,12 @@ class CustomTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             errorText: errorText,
+            prefixIcon: prefixIcon,
             suffixIcon: suffix,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: prefixIcon == null ? 16 : 12,
+              vertical: 13,
+            ),
           ),
         ),
       ],

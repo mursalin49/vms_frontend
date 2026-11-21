@@ -16,8 +16,7 @@ abstract class VehicleRepository {
   Future<void> delete(int id);
 }
 
-/// Switched to ApiVehicleRepository connected to the REST API:
+/// Vehicle repository provider connected to the REST API:
 /// https://vms-backend-lioc.onrender.com/api/vehicles
-/// To test offline without backend, replace with MockVehicleRepository()
 final vehicleRepositoryProvider =
     Provider<VehicleRepository>((ref) => ApiVehicleRepository());
